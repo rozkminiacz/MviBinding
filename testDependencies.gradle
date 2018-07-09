@@ -1,0 +1,31 @@
+ext {
+
+    def JunitVersion = '4.12'
+    def MockitoCoreVersion = '2.10.0'
+    def JodaTimeVersion = '2.9.7'
+    def PowerMockVersion = '1.6.5'
+    def KotlinMockitoVersion = '1.5.0'
+
+    unitTestDependencies = [
+            junit      : "junit:junit:${JunitVersion}",
+            mockitoCore: "org.mockito:mockito-core:${MockitoCoreVersion}",
+            jodaTime   : "joda-time:joda-time:${JodaTimeVersion}",
+    ]
+
+    powerMockDependencies = [
+            powerMockito    : "org.powermock:powermock:${PowerMockVersion}",
+            powerMockJUnit  : "org.powermock:powermock-module-junit4:${PowerMockVersion}",
+            powerMockMockito: "org.powermock:powermock-api-mockito:${PowerMockVersion}",
+    ]
+
+    kotlinTestDependencies = [
+            kotlinMockito: "com.nhaarman:mockito-kotlin:${KotlinMockitoVersion}",
+    ]
+
+    spekDependencies = [
+            api     : "org.jetbrains.spek:spek-api:1.1.5",
+            platfrom: "org.jetbrains.spek:spek-junit-platform-engine:1.1.5",
+            runner  : "org.junit.platform:junit-platform-runner:1.0.0",
+            bdd     : "com.github.rozkminiacz:SpekBddDsl:1.0"
+    ]
+}
