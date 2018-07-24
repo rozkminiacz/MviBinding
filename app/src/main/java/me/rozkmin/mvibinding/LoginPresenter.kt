@@ -2,9 +2,14 @@ package me.rozkmin.mvibinding
 
 import io.reactivex.Observable
 import io.reactivex.Observable.mergeArray
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 
-class LoginPresenter(private val interactor: LoginContract.Interactor) : LoginContract.Presenter() {
+class LoginPresenter(
+        private val interactor: LoginContract.Interactor,
+        private val navigator: Navigator) : LoginContract.Presenter() {
+
+    private val compositeDisposable = CompositeDisposable()
+
     override fun bindIntents() {
 
         val emailEditIntent = intent { it.emailChangeIntent() }
@@ -15,7 +20,14 @@ class LoginPresenter(private val interactor: LoginContract.Interactor) : LoginCo
 
         val submitIntent = intent { it.submitIntent() }
                 .flatMap { interactor.login(it.first, it.second) }
-                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext {
+                    if (it == LoginPartialChanges.Success) navigator.openMainScreen()
+                }
+
+        val forgotPasswordIntent = intent { it.forgotPasswordIntent() }
+                .doOnNext { navigator.openForgotPasswordScreen() }
+
+        compositeDisposable.add(forgotPasswordIntent.subscribe())
 
         val allIntentsObservable: Observable<LoginPartialChanges> = mergeArray(
                 emailEditIntent,
@@ -23,6 +35,11 @@ class LoginPresenter(private val interactor: LoginContract.Interactor) : LoginCo
                 submitIntent)
 
         subscribeViewState(allIntentsObservable.scan(LoginViewState(), this::viewStateReducer), LoginContract.View::render)
+    }
+
+    override fun unbindIntents() {
+        compositeDisposable.dispose()
+        super.unbindIntents()
     }
 
     private fun viewStateReducer(previousState: LoginViewState, partialChanges: LoginPartialChanges) = partialChanges.reduce(previousState)

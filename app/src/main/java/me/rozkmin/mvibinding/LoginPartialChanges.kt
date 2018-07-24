@@ -21,7 +21,7 @@ sealed class LoginPartialChanges {
 
     object Success : LoginPartialChanges() {
         override fun reduce(previousState: LoginViewState): LoginViewState {
-            return previousState.copy(loading = false, showError = false)
+            return previousState.copy(loading = false, showError = false, errorMessage = "")
         }
     }
 

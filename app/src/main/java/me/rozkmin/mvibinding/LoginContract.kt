@@ -12,6 +12,7 @@ interface LoginContract {
         fun emailChangeIntent(): Observable<String>
         fun passwordChangeIntent(): Observable<String>
         fun submitIntent(): Observable<Pair<String, String>>
+        fun forgotPasswordIntent(): Observable<Any>
         fun render(viewState: LoginViewState)
     }
 
